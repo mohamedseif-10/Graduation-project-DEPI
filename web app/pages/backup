@@ -1,0 +1,385 @@
+# with st.container():
+#     st.header("Financial Metrics Overview")
+
+#     col1, col2, col3, col4= st.columns(4)
+
+#     with col1:
+#         st.markdown("#### Total Accounts Receivable")
+#         fig1 = go.Figure(
+#             go.Indicator(
+#                 mode="gauge+number", value=50000, title={"text": "Accounts Receivable"}
+#             )
+#         )
+#         st.plotly_chart(fig1)
+
+#     with col2:
+#         st.markdown("#### Total Accounts Payable")
+#         fig2 = go.Figure(
+#             go.Indicator(
+#                 mode="gauge+number", value=30000, title={"text": "Accounts Payable"}
+#             )
+#         )
+#         st.plotly_chart(fig2)
+
+#     with col3:
+#         st.markdown("#### Equity Ratio")
+#         fig3 = go.Figure(
+#             go.Indicator(
+#                 mode="gauge+number", value=0.75, title={"text": "Equity Ratio"}
+#             )
+#         )
+#         st.plotly_chart(fig3)
+
+#     with col4:
+#         st.markdown("#### Debt Equity Ratio")
+#         fig4 = go.Figure(
+#             go.Indicator(
+#                 mode="gauge+number", value=0.45, title={"text": "Debt Equity Ratio"}
+#             )
+#         )
+#         st.plotly_chart(fig4)
+
+# # Middle Row: Financial Charts (Bar Chart and Line Chart)
+# with st.container():
+#     st.header("Financial Insights")
+
+#     col5, col6 = st.columns(2)
+
+#     with col5:
+#         st.markdown("#### Accounts Receivable by Aging")
+#         aging_data = pd.DataFrame(
+#             {
+#                 "Age Group": ["0-30 days", "31-60 days", "61-90 days", "90+ days"],
+#                 "Amount": [12000, 18000, 10000, 1000],
+#             }
+#         )
+#         fig5 = px.bar(
+#             aging_data, x="Age Group", y="Amount", title="Accounts Receivable by Aging"
+#         )
+#         st.plotly_chart(fig5)
+
+#     with col6:
+#         st.markdown("#### Net Working Capital Over Time")
+#         time_data = pd.DataFrame(
+#             {
+#                 "Month": ["Jan", "Feb", "Mar", "Apr", "May"],
+#                 "Net Working Capital": [15000, 16000, 15500, 16200, 17000],
+#             }
+#         )
+#         fig6 = px.line(
+#             time_data,
+#             x="Month",
+#             y="Net Working Capital",
+#             title="Net Working Capital Trend",
+#         )
+#         st.plotly_chart(fig6)
+
+# # Bottom Row: Profit & Loss and Financial Ratios
+# with st.container():
+#     col7, col8 = st.columns(2)
+
+#     with col7:
+#         st.markdown("#### Profit and Loss Breakdown")
+#         profit_loss_data = pd.DataFrame(
+#             {
+#                 "Category": [
+#                     "Revenue",
+#                     "COGS",
+#                     "Gross Profit",
+#                     "Operating Expenses",
+#                     "Net Profit",
+#                 ],
+#                 "Amount": [50000, 30000, 20000, 15000, 5000],
+#             }
+#         )
+#         fig7 = px.bar(
+#             profit_loss_data,
+#             x="Category",
+#             y="Amount",
+#             title="Profit and Loss Breakdown",
+#         )
+#         st.plotly_chart(fig7)
+
+#     with col8:
+#         st.markdown("#### Financial Ratios Comparison")
+#         ratios_data = pd.DataFrame(
+#             {
+#                 "Period": ["Q1", "Q2", "Q3", "Q4"],
+#                 "Equity Ratio": [0.75, 0.78, 0.77, 0.80],
+#                 "Debt Equity Ratio": [0.45, 0.42, 0.43, 0.40],
+#             }
+#         )
+#         fig8 = go.Figure(
+#             data=[
+#                 go.Bar(
+#                     name="Equity Ratio",
+#                     x=ratios_data["Period"],
+#                     y=ratios_data["Equity Ratio"],
+#                 ),
+#                 go.Bar(
+#                     name="Debt Equity Ratio",
+#                     x=ratios_data["Period"],
+#                     y=ratios_data["Debt Equity Ratio"],
+#                 ),
+#             ]
+#         )
+#         fig8.update_layout(barmode="stack", title="Financial Ratios Over Time")
+#         st.plotly_chart(fig8)
+
+# # Table Summary: Key Financial Metrics
+# with st.container():
+#     st.header("Key Financial Metrics Summary")
+#     metrics_data = pd.DataFrame(
+#         {
+#             "Metric": [
+#                 "Total Revenue",
+#                 "Total Expenses",
+#                 "Net Profit",
+#                 "Equity Ratio",
+#                 "Debt Equity Ratio",
+#             ],
+#             "Value": [50000, 30000, 5000, 0.75, 0.45],
+#         }
+#     )
+#     st.table(metrics_data)
+
+
+# col1, col2, col3, col4 = st.columns(4)
+
+# with col1:
+#     fig1 = go.Figure(
+#         go.Indicator(
+#             mode="gauge+number", value=50000, title={"text": "Accounts Receivable"}
+#         )
+#     )
+#     st.plotly_chart(fig1)
+
+# with col2:
+#     fig2 = go.Figure(
+#         go.Indicator(
+#             mode="gauge+number", value=30000, title={"text": "Accounts Payable"}
+#         )
+#     )
+#     st.plotly_chart(fig2)
+
+# with col3:
+#     fig3 = go.Figure(
+#         go.Indicator(mode="gauge+number", value=0.75, title={"text": "Equity Ratio"})
+#     )
+#     st.plotly_chart(fig3)
+
+# with col4:
+#     fig4 = go.Figure(
+#         go.Indicator(mode="gauge+number", value=0.45, title={"text": "Debt Equity"})
+#     )
+#     st.plotly_chart(fig4)
+
+# # Middle Row: Bar chart for Accounts Receivable by Aging & Line chart for Net Working Capital
+# st.header("Financial Insights")
+# col5, col6 = st.columns(2)
+
+# with col5:
+#     st.markdown("#### Accounts Receivable by Aging")
+#     aging_data = pd.DataFrame(
+#         {
+#             "Age Group": ["0-30 days", "31-60 days", "61-90 days", "90+ days"],
+#             "Amount": [12000, 18000, 10000, 1000],
+#         }
+#     )
+#     fig5 = px.bar(
+#         aging_data, x="Age Group", y="Amount", title="Accounts Receivable by Aging"
+#     )
+#     st.plotly_chart(fig5)
+
+# with col6:
+#     st.markdown("#### Net Working Capital Over Time")
+#     time_data = pd.DataFrame(
+#         {
+#             "Month": ["Jan", "Feb", "Mar", "Apr", "May"],
+#             "Net Working Capital": [15000, 16000, 15500, 16200, 17000],
+#         }
+#     )
+#     fig6 = px.line(
+#         time_data, x="Month", y="Net Working Capital", title="Net Working Capital Trend"
+#     )
+#     st.plotly_chart(fig6)
+
+# # Bottom Row: Bar chart for Profit and Loss Breakdown, Stacked Bar Chart for Financial Ratios, and Table
+# st.header("Financial Ratios and Metrics")
+# col7, col8, col9 = st.columns(3)
+
+# with col7:
+#     st.markdown("#### Profit and Loss Breakdown")
+#     profit_loss_data = pd.DataFrame(
+#         {
+#             "Category": [
+#                 "Revenue",
+#                 "COGS",
+#                 "Gross Profit",
+#                 "Operating Expenses",
+#                 "Net Profit",
+#             ],
+#             "Amount": [50000, 30000, 20000, 15000, 5000],
+#         }
+#     )
+#     fig7 = px.bar(
+#         profit_loss_data, x="Category", y="Amount", title="Profit and Loss Breakdown"
+#     )
+#     st.plotly_chart(fig7)
+
+# with col8:
+#     st.markdown("#### Financial Ratios Comparison")
+#     ratios_data = pd.DataFrame(
+#         {
+#             "Period": ["Q1", "Q2", "Q3", "Q4"],
+#             "Equity Ratio": [0.75, 0.78, 0.77, 0.80],
+#             "Debt Equity Ratio": [0.45, 0.42, 0.43, 0.40],
+#         }
+#     )
+#     fig8 = go.Figure(
+#         data=[
+#             go.Bar(
+#                 name="Equity Ratio",
+#                 x=ratios_data["Period"],
+#                 y=ratios_data["Equity Ratio"],
+#             ),
+#             go.Bar(
+#                 name="Debt Equity Ratio",
+#                 x=ratios_data["Period"],
+#                 y=ratios_data["Debt Equity Ratio"],
+#             ),
+#         ]
+#     )
+#     fig8.update_layout(barmode="stack", title="Financial Ratios Over Time")
+#     st.plotly_chart(fig8)
+
+# with col9:
+#     st.markdown("#### Key Financial Metrics Summary")
+#     metrics_data = pd.DataFrame(
+#         {
+#             "Metric": [
+#                 "Total Revenue",
+#                 "Total Expenses",
+#                 "Net Profit",
+#                 "Equity Ratio",
+#                 "Debt Equity Ratio",
+#             ],
+#             "Value": [50000, 30000, 5000, 0.75, 0.45],
+#         }
+#     )
+#     st.table(metrics_data)
+
+
+
+
+
+#
+# #
+# def plot_metric(label, value, prefix="", suffix="", show_graph=False, color_graph=""):
+#     fig = go.Figure()
+
+#     fig.add_trace(
+#         go.Indicator(
+#             value=value,
+#             gauge={"axis": {"visible": False}},
+#             number={
+#                 "prefix": prefix,
+#                 "suffix": suffix,
+#                 "font.size": 18,
+#             },
+#             title={
+#                 "text": label,
+#                 "font": {"size": 15, "weight": "bold"},
+#             },
+#         )
+#     )
+
+#     if show_graph:
+#         fig.add_trace(
+#             go.Scatter(
+#                 y=random.sample(range(0, 101), 30),
+#                 hoverinfo="skip",
+#                 fill="tozeroy",
+#                 fillcolor=color_graph,
+#                 line={
+#                     "color": color_graph,
+#                 },
+#             )
+#         )
+
+#     fig.update_xaxes(visible=False, fixedrange=True)
+#     fig.update_yaxes(visible=False, fixedrange=True)
+#     fig.update_layout(
+#         margin=dict(t=36, b=0),
+#         showlegend=False,
+#         plot_bgcolor="white",
+#         height=100,
+#     )
+
+#     st.plotly_chart(fig, use_container_width=True)
+
+
+
+# with st.container():
+#     st.header("Key Metrics Summary")
+#     metrics_data = pd.DataFrame(
+#         {
+#             "Metric": [
+#                 "Total Accounts",
+#                 "Total Balance",
+#                 "Active Members",
+#                 "Average Credit Score",
+#                 "Average Tenure",
+#             ],
+#             "Value": [
+#                 len(data),
+#                 data["balance"].sum(),
+#                 data["active_member"].sum(),
+#                 data["credit_score"].mean(),
+#                 data["tenure"].mean(),
+#             ],
+#         }
+#     )
+#     st.table(metrics_data)
+
+
+
+########################################################################################
+
+
+########################################################################################
+# def plot_metric(
+#     label,
+#     value,
+#     prefix="",
+#     suffix="",):
+#     fig = go.Figure()
+
+#     fig.add_trace(
+#         go.Indicator(
+#             mode="number",
+#             value=value,
+#             title={"text": label},
+#             number={"prefix": prefix, "suffix": suffix},
+#         )
+#     )
+
+#     fig.update_layout(
+#         template="plotly_dark",
+#         margin=dict(l=20, r=20, t=40, b=20),
+#     )
+
+#     st.plotly_chart(fig, use_container_width=True)
+
+# def plot_gauge(value, label, ):
+#     fig1 = go.Figure(
+#         go.Indicator(
+#             mode="gauge+number",
+#             value=value,
+#             title={"text": label.capitalize()}
+#         )
+#     )
+#     st.plotly_chart(fig1)
+
+
+########################################################################################
