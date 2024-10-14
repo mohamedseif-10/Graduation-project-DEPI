@@ -7,7 +7,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 import time
+st.markdown(
+    """
+    <style>
 
+    [data-testid="stSidebar"] {
+        background: linear-gradient(135deg, #83c9ff, #d9f1ff);  /* Light blue background for sidebar */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Loading the data with cache
 @st.cache_data
@@ -19,15 +29,14 @@ def load_data():
 
 
 data = load_data()
-
+@st.cache_data
 def plot_gauge(
     target_value, indicator_color, indicator_suffix, indicator_title, max_bound
 ):
-    num_frames = 30  # Total number of frames for the animation
+    num_frames = 30 
     values = np.linspace(
         0, target_value, num_frames
-    )  # Create a sequence from 0 to target_value
-
+    )  
     frames = [
         go.Frame(
             data=[
@@ -47,7 +56,7 @@ def plot_gauge(
                     },
                     title={
                         "text": indicator_title,
-                        "font": {"size": 10, "weight": "bold"},
+                        "font": {"size": 18, "weight": "bold", "color": "#f2c453"},
                     },
                 )
             ],
@@ -56,49 +65,32 @@ def plot_gauge(
         for value in values
     ]
 
-    # Create the initial figure
     fig = go.Figure(
-        data=frames[0].data,  # Start with the first frame
+        data=frames[0].data, 
         layout=frames[0].layout,
         frames=frames,
     )
 
-    # Layout adjustments
     fig.update_layout(
         height=200,
         margin=dict(l=26, r=26, t=0, b=0, pad=0),
     )
-
-    # Placeholder for the plot
     placeholder = st.empty()
-
-    # Run the animation automatically
+    
     for frame in frames:
-        fig.update_traces(value=frame.data[0].value)  # Update the gauge value
+        fig.update_traces(value=frame.data[0].value)
         placeholder.plotly_chart(
             fig, use_container_width=True
         )  # Render the updated figure
-        time.sleep(0.00001)  # Adjust speed of animation
+        # time.sleep(0.00001)  # Adjust speed of animation
 
 
+@st.cache_data
 def plot_top_right():
-    aggregated_data = data.groupby("country")["churn"].mean().reset_index()
-
-    fig = px.bar(
-        aggregated_data,
-        x="country",
-        y="churn",
-        title="Churn Rate by Country",
-        height=400,
-        text_auto=True,
-    )
-    fig.update_traces(
-        textfont_size=12, textangle=0, textposition="outside", cliponaxis=False
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    pass
 
 
-def plot_bottom_left():
+def plot_top_left():
     monthly_churn = data.groupby("age_group")["churn"].mean().reset_index()
 
     fig = px.line(
@@ -113,28 +105,102 @@ def plot_bottom_left():
     st.plotly_chart(fig, use_container_width=True)
 
 
-def plot_bottom_right():
-    balance_by_country = data.groupby("country")["balance"].mean().reset_index()
-
-    fig = px.bar(
-        balance_by_country,
-        x="country",
-        y="balance",
-        title="Average Balance by Country",
+def plot_bottom_left():
+    active_churn_counts = (
+        data.groupby(["active_member", "churn"]).size().reset_index(name="count")
     )
-    st.plotly_chart(fig, use_container_width=True)
+    active_churn_counts["active_member_status"] = active_churn_counts["active_member"].map(
+        {0: "Inactive", 1: "Active"}
+    )
+    active_churn_counts["label"] = active_churn_counts.apply(
+        lambda row: f"{'Churn' if row['churn'] == 1 else 'Non-Churn'} - {row['active_member_status']}",
+        axis=1,
+    )
 
-st.title("Churn Prediction visualizations")
+    # Calculate total count
+    total_count = active_churn_counts['count'].sum()
+
+    # Create a new column for percentages
+    active_churn_counts['percentage'] = (active_churn_counts['count'] / total_count) * 100
+
+    custom_colors2 = ["#193967", "#0068c9", "#83c9ff", "#f2c453"]
+    fig = px.pie(
+        active_churn_counts,
+        names="label",
+        values="count",
+        title="Churn vs Non-Churn by Active Membership",
+        color_discrete_sequence=custom_colors2,
+    )
+
+    # Update traces to include percentage in textinfo
+    fig.update_traces(
+        textinfo="percent",  # Show both label and percentage
+        textposition="inside",  # Show text inside the pie chart
+        hoverinfo="label+percent+value",
+        marker=dict(line=dict(color="#FFFFFF", width=2)),
+    )
+
+    # Customize layout for better aesthetics
+    fig.update_layout(
+        annotations=[
+            dict(text=f"{row['percentage']:.2f}%", x=row['count'], y=row['count'], font_size=20, showarrow=False) 
+            for index, row in active_churn_counts.iterrows()
+        ]
+    )
+
+    st.plotly_chart(fig)
+
+def plot_bottom_right():
+    bins = [-1, 50000, 90000, 127000, np.inf]
+    labels = ["0-50k", "50k-90k", "90k-127k", "127k+"]
+    data["balance_seg"] = pd.cut(data["balance"], bins=bins, labels=labels, right=False)
+    churned_data = data[data["churn"] == 1]
+
+    # Count occurrences in each balance segment
+    balance_churn_counts = churned_data["balance_seg"].value_counts().reset_index()
+    balance_churn_counts.columns = ["balance_seg", "count"]
+
+    # Create a pie chart for the balance segments of churned customers
+    fig = go.Figure()
+    custom_colors2 = [
+        "#193967" ,
+        "#0068c9",
+        "#83c9ff",
+        "#f2c453"
+    ]
+    fig.add_trace(
+        go.Pie(
+            labels=balance_churn_counts["balance_seg"],
+            values=balance_churn_counts["count"],
+            textinfo="label+percent",
+            hole=0.3,
+            marker=dict(
+                colors=custom_colors2,  # Set the custom colors here
+                line=dict(color="#FFFFFF", width=2)
+            ),
+        )
+    )
+
+    # Update layout for better readability
+    fig.update_layout(
+        title="Churned Customers Distribution by Balance Segmentation",
+        height=340,
+        margin=dict(l=23, r=26, t=100, b=0, pad=0),
+    )
+    st.plotly_chart(fig)
+
+st.title("Customer Churn visualizations")
+st.image("Bank.jpg", use_column_width=True, width=700)
 st.write("### Discover your inner treasure💰")
-st.sidebar.success("Select a page to view")
+st.sidebar.info(
+    """
+    This page provides a detailed overview of the data used for predicting customer churn with interactive visualizations and dahsboards with key insights.
+    """
+)
 
 
 st.markdown(
     """
-## Data Summary
-This section provides a detailed overview of the data used for predicting customer churn. 
-
-### Features:
 - **Summary Statistics**: Get insights into key statistical metrics of the data, such as averages, minimums, and maximums.
 - **Interactive Dashboards**: Explore interactive visualizations to better understand the relationship between different features and customer churn. These dashboards allow for dynamic data exploration.
 
@@ -177,7 +243,6 @@ with st.container():
         # )
         plot_gauge(len(data), "#0068C9", "", "Total Customers", 10000)
         plot_gauge(churn_percentage, "#0068C9", "%", "Churn Rate", 100)
-        
 
     with column_2:
         plot_gauge(
@@ -223,92 +288,181 @@ with st.container():
         )
 
 
-top_left_column, top_right_column = st.columns((6, 1))
-bottom_left_column, bottom_middle_columns, bottom_right_column = st.columns((5, 4, 5))
+# top_left_column, top_right_column = st.columns((5,5))
 
-with st.container():
-    with bottom_right_column:
-        plot_bottom_left()
-        # pie chart
-        fig_pie = px.pie(data, names="gender_country", title="Products Distribution")
-        st.plotly_chart(fig_pie)
+# with st.container():
+#     with top_left_column:
+#         plot_top_left()
 
-    with bottom_middle_columns:
-        plot_bottom_right()
-        plot_top_right()
+#     with top_right_column:
+#         plot_top_right()
 
-    with bottom_left_column:
-        pie_chart_for_country = px.pie(
-            data,
-            names="country",
-            title="Distribution of Customers by Country",
-        )
-        st.plotly_chart(pie_chart_for_country)
-
-    # Middle Row: Financial Insights
-    st.write(
-        "----------------------------------------------------------------------------------------"
-    )
 with st.container():
     st.header("Key Insights")
+    churned_data = data[data["churn"] == 1]
+    tenure_churn_counts = (
+        churned_data.groupby("tenure").size().reset_index(name="count")
+    )
+    tenure_churn_counts["rolling_mean"] = (
+        tenure_churn_counts["count"].rolling(window=1, center=True).mean()
+    )
+    fig6 = px.histogram(
+        data,
+        x="tenure",
+        title="Tenure Distribution with Churn Trend",
+        nbins=30,
+        color="churn",
+    )
+    fig6.update_layout(bargap=0.2)
+    fig6.update_traces(marker_line_width=0.1, marker_line_color="black")
+    fig6.update_xaxes(title_text="Tenure")
 
-    col5, col6 = st.columns(2)
+    # Add mean tenure line
+    mean_tenure = data["tenure"].mean()
+    fig6.add_vline(
+        x=mean_tenure,
+        line_width=2,
+        line_dash="dash",
+        line_color="orange",
+        annotation_text=f"Mean Tenure: {mean_tenure:.2f}",
+        annotation_position="top left",
+    )
 
-    with col5:
-        balance_country_data = data.groupby("country")["balance"].sum().reset_index()
-        fig5 = px.bar(
-            balance_country_data,
-            x="country",
-            y="balance",
-            title="Total Balance by Country",
-        )
-        st.plotly_chart(fig5)
+    # Add trend line for churned customers (rolling mean)
+    fig6.add_scatter(
+        x=tenure_churn_counts["tenure"],
+        y=tenure_churn_counts["rolling_mean"],
+        mode="lines",
+        line=dict(color="orange", width=3),
+        name="Churned Customers",
+    )
 
-    with col6:
-        fig6 = px.histogram(
-            data, x="credit_score", title="Credit Score Distribution", nbins=10
-        )
-        st.plotly_chart(fig6)
+    # Show the plot in Streamlit
+    st.plotly_chart(fig6)
 
-# Bottom Row: Age and Gender Insights
 with st.container():
-    col7, col8 = st.columns(2)
+    col7, col8 = st.columns((2,2.4))
 
     with col7:
-        age_group_data = data["age_group"].value_counts().reset_index()
-        age_group_data.columns = ["Age Group", "Count"]
-        fig7 = px.pie(
-            age_group_data,
-            values="Count",
-            names="Age Group",
-            title="Age Group Distribution",
+
+
+        churned_data = data[data["churn"] == 1]
+        age_group_counts = churned_data["age_group"].value_counts()
+        age_group_percentages = age_group_counts.reset_index()
+
+        age_group_percentages.columns = ["age_group", "count"]
+        age_group_percentages["percentage"] = (
+            age_group_percentages["count"] / age_group_percentages["count"].sum() * 100
+        ).round(2)
+
+        custom_colors = ["#0068c9", "#83c9ff", "#f2c453"]
+        fig = px.pie(
+            age_group_percentages,
+            names="age_group",
+            values="percentage",
+            title="Churn Percentage by Age Group",
+            labels={"percentage": "Percentage"},
+            color_discrete_sequence=custom_colors,
+            # how to make hole in the middle
+            hole=0.4,
         )
-        st.plotly_chart(fig7)
+        
+
+        fig.update_layout(
+            title_text="Percentage of Churned Customers by Age Group",
+            legend_title_text="Age Groups",
+            height=400,
+            margin=dict(l=22, r=22, t=100, b=0, pad=0),
+        )
+
+        fig.update_traces(
+            hoverinfo="label+percent+value",
+            textinfo="percent",
+            textfont_size=16,
+            marker=dict(line=dict(color="#FFFFFF", width=2)),
+        )
+
+        st.plotly_chart(fig)
 
     with col8:
-        gender_country_data = (
-            data.groupby(["country", "gender"]).size().reset_index(name="Count")
+        data["gender_country"] = data["gender"] + " " + data["country"]
+
+        gender_country_counts = (
+            data.groupby(["gender_country", "churn"]).size().unstack(fill_value=0)
         )
-        fig8 = px.bar(
-            gender_country_data,
-            x="country",
+
+        gender_country_counts.reset_index(inplace=True)
+
+        gender_country_counts_melted = gender_country_counts.melt(
+            id_vars="gender_country",
+            value_vars=[0, 1],
+            var_name="Churn Status",
+            value_name="Count",
+        )
+
+        gender_country_counts_melted["Churn Status"] = gender_country_counts_melted[
+            "Churn Status"
+        ].map({0: "Non-Churned", 1: "Churned"})
+
+        gender_country_counts_melted["country"] = gender_country_counts_melted[
+            "gender_country"
+        ].apply(lambda x: x.split(" ")[-1])
+
+        gender_country_counts_melted["gender_order"] = gender_country_counts_melted[
+            "gender_country"
+        ].apply(lambda x: x.split(" ")[0])
+        
+        gender_country_counts_melted.sort_values(
+            by=["country", "gender_order"], inplace=True
+        )
+
+        color_map = {
+            "Churned": "#f2c453",  # Color for churned
+            "Non-Churned": "#0068c9"  # You can choose another color for non-churned
+        }
+
+        fig = px.bar(
+            gender_country_counts_melted,
+            x="gender_country",
             y="Count",
-            color="gender",
-            title="Gender Distribution by Country",
+            color="Churn Status",
+            labels={
+                "gender_country": "Gender - Country",
+                "Count": "Number of Customers",
+            },
+            title="Customer Count by Gender and Country for Churn Status",
+            color_discrete_map=color_map,  # Apply custom color mapping
+            #rotate x-axis labels
+            
         )
-        st.plotly_chart(fig8)
+
+        fig.update_layout(
+            xaxis_title="Gender - Country",
+            yaxis_title="Number of Customers",
+            width=1200,
+            height=500,
+            barmode="group",
+            xaxis_tickangle=90,
+        )
+
+        fig.update_xaxes(dtick=1)
+        st.plotly_chart(fig)
+
+bottom_left_column, bottom_right_column= st.columns((3, 3))
+with st.container():
+    with bottom_left_column:
+        plot_bottom_left()
+    with bottom_right_column:
+        plot_bottom_right()
 
 
 print("-" * 20)
 
 
-st.markdown("### Interactive Dashboards")
-
-st.markdown("#### Churn Distribution by Age")
+st.markdown("### Discover more Interactive Dashboards 📊")
 
 tab1, tab2, tab3 = st.tabs(["Bar chart", "Histogram", "Pie chart"])
 
-# Bar chart for age vs churn, color by gender
 with tab1:
     fig_bar = px.bar(data, x="age", y="churn", color="gender")
     st.plotly_chart(fig_bar)
