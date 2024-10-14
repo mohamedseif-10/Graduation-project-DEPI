@@ -4,23 +4,37 @@ st.set_page_config(
     page_title="Bank Churn Prediction",
     page_icon=":bank:",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
 
 st.sidebar.title("Bank Churn prediction")
 st.sidebar.info("Select a page to view")
 
-st.title("Welcome to the Churn Prediction App")
+st.title("Bank Customer Churn Prediction")
 
 # add this photo
-st.image("photo.jpg", use_column_width=True, width=400)
+st.image("Bank.jpg", use_column_width=True, width=400)
+
+st.markdown(
+    """
+    <style>
+
+    [data-testid="stSidebar"] {
+        background: linear-gradient(135deg, #83c9ff, #d9f1ff);  /* Light blue background for sidebar */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 st.markdown(
     """
 ## Overview 🔎
 This web application predicts whether a bank customer will churn based on various factors such as credit score, age, balance, and account activity. The dataset includes customers from banks in France, Germany, and Spain.
 
-## Business Problem 🙍‍♂️
-<b><span style="color:red">Customer churn</span></b> is a significant challenge in the banking industry. Banks invest substantial resources to acquire new customers, but retaining existing customers is often more cost-effective. Understanding the factors that lead to customer churn enables banks to take proactive measures, such as offering personalized services or targeted promotions, to improve retention rates.
+## <span style="color:#f2c453">Business Problem 🙍‍♂️</span>
+**<span style="color:blue">Customer churn</span>** is a significant challenge in the banking industry. Banks invest substantial resources to acquire new customers, but retaining existing customers is often more cost-effective. Understanding the factors that lead to customer churn enables banks to take proactive measures, such as offering personalized services or targeted promotions, to improve retention rates.
 
 In this project, we aim to predict whether a customer will churn based on a range of attributes, including:
 
