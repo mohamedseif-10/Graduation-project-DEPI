@@ -382,7 +382,7 @@ def pie_chart_churned_age():
 
     st.plotly_chart(fig)
 
-
+@st.chache_data
 def bar_gender_country():
     data["gender_country"] = data["gender"] + " " + data["country"]
 
