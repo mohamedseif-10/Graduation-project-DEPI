@@ -3,6 +3,16 @@ import pandas as pd
 import joblib
 import plotly.express as px
 
+st.set_page_config(
+    page_icon=":bank:",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+#add spinner
+with st.spinner("Loading💸💸"):
+    import time
+    time.sleep(0.0003)
 
 # Load the data
 @st.cache_data

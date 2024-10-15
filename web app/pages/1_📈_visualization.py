@@ -7,6 +7,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 import time
+
+st.set_page_config(
+    page_icon=":bank:",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+
 st.markdown(
     """
     <style>
@@ -29,7 +37,7 @@ def load_data():
 
 data = load_data()
 
-@st.cache_data
+
 def plot_gauge(
     target_value, indicator_color, indicator_suffix, indicator_title, max_bound
 ):
