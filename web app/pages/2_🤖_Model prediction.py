@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-#add spinner
+# add spinner
 with st.spinner("Loading💸💸"):
     import time
     time.sleep(0.0003)
@@ -99,7 +99,7 @@ with st.form(key="unique_prediction_form"):
             "Enter the account balance",
             min_value=data["balance"].min(),
             max_value=data["balance"].max(),
-            value=50000.0,
+            value=0.0,
         )
     )
     age = int(
