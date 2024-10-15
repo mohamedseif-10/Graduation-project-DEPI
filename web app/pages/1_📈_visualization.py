@@ -7,29 +7,37 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 import time
+
+st.set_page_config(
+    page_icon=":bank:",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+
 st.markdown(
     """
     <style>
 
     [data-testid="stSidebar"] {
-        background: linear-gradient(135deg, #83c9ff, #d9f1ff);  /* Light blue background for sidebar */
+        background:#e4f0ff
+;  /* Light blue background for sidebar */
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Loading the data with cache
+
 @st.cache_data
 def load_data():
-    data = pd.read_csv(
-        "C:\\Users\\LENOVO\\Documents\\AI-IBM_Data_Scientist\\Projects\\final_project\\Graduation-project-DEPI\\Data\\modified_Bank_Customer_Churn_Prediction.csv"
-    )
+    data = pd.read_csv("../Data/modified_Bank_Customer_Churn_Prediction.csv")
     return data
 
 
 data = load_data()
-@st.cache_data
+
+
 def plot_gauge(
     target_value, indicator_color, indicator_suffix, indicator_title, max_bound
 ):
@@ -76,13 +84,13 @@ def plot_gauge(
         margin=dict(l=26, r=26, t=0, b=0, pad=0),
     )
     placeholder = st.empty()
-    
+
     for frame in frames:
         fig.update_traces(value=frame.data[0].value)
         placeholder.plotly_chart(
             fig, use_container_width=True
         )  # Render the updated figure
-        # time.sleep(0.00001)  # Adjust speed of animation
+        time.sleep(0.005)  # Adjust speed of animation
 
 
 @st.cache_data
@@ -190,7 +198,7 @@ def plot_bottom_right():
     st.plotly_chart(fig)
 
 st.title("Customer Churn visualizations")
-st.image("Bank.jpg", use_column_width=True, width=700)
+st.image("Background.jpg", use_column_width=True, width=700)
 st.write("### Discover your inner treasure💰")
 st.sidebar.info(
     """

@@ -7,8 +7,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.sidebar.title("Bank Churn prediction")
-st.sidebar.info("Select a page to view")
+# st.sidebar.title("Bank Churn prediction")
+# st.sidebar.info("Select a page to view")
 
 st.title("Bank Customer Churn Prediction")
 
@@ -20,7 +20,7 @@ st.markdown(
     <style>
 
     [data-testid="stSidebar"] {
-        background: linear-gradient(135deg, #83c9ff, #d9f1ff);  /* Light blue background for sidebar */
+        background: #e4f0ff;  /* Light blue background for sidebar */
     }
     </style>
     """,
