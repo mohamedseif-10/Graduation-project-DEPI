@@ -11,7 +11,7 @@ import time
 st.set_page_config(
     page_icon=":bank:",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 
