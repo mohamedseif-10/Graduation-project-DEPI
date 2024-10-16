@@ -32,8 +32,9 @@ st.markdown(
 @st.cache_data
 def load_data():
     data = pd.read_csv("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-depi/main/Data/modified_Bank_Customer_Churn_Prediction.csv")
+    return data
 
-load_data()
+data =load_data()
 
 
 # is there any way to cache the data but after the first time
