@@ -31,7 +31,7 @@ st.markdown(
 
 @st.cache_data
 def load_data():
-    data = pd.read_csv("../Data/modified_Bank_Customer_Churn_Prediction.csv")
+    data = pd.read_csv("https://github.com/mohamedseif-10/Graduation-project-DEPI/blob/main/Data/modified_Bank_Customer_Churn_Prediction.csv")
     return data
 
 
