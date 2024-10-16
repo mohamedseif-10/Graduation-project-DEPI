@@ -45,10 +45,8 @@ The dataset consists of customer information, including:
 - Plotly
 - Scikit-learn
 - NumPy
-
-## Usage
-Run the Streamlit application with the following command:
-```bash
-streamlit run app.py
+- Docker
+- Hugging face
+  
 
 
