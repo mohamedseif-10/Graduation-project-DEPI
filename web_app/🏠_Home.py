@@ -11,14 +11,8 @@ st.set_page_config(
 
 st.title("Bank Customer Churn Prediction")
 
-default_image = "https://github.com/mohamedseif-10/Graduation-project-DEPI/blob/main/web_app/Background.jpg"  # Replace with your default image URL
+st.image("Background.jpg", use_column_width=True)
 
-try:
-    st.image("Background.jpg", use_column_width=True)
-except FileNotFoundError:
-    st.image(default_image, use_column_width=True)
-
-# Styling for sidebar
 st.markdown(
     """
     <style>
