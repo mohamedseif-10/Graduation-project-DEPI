@@ -11,7 +11,7 @@ st.set_page_config(
 
 st.title("Bank Customer Churn Prediction")
 
-st.image("Background.jpg", use_column_width=True)
+st.image("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/Background.jpg", use_column_width=True)
 
 st.markdown(
     """
