@@ -17,7 +17,8 @@ with st.spinner("Loading💸💸"):
 # Load the data
 @st.cache_data
 def load_data():
-    data = pd.read_csv("https://github.com/mohamedseif-10/Graduation-project-DEPI/blob/main/Data/modified_Bank_Customer_Churn_Prediction.csv")
+    data = pd.read_csv("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-depi/main/Data/modified_Bank_Customer_Churn_Prediction.csv")
+
     return data
 
 
