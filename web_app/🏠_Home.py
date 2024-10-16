@@ -114,7 +114,3 @@ with st.form(key="feedback_form"):
         feedback_df.to_csv(feedback_file, index=False)
 
         st.success("Thank you for your feedback! We appreciate your input.")
-
-# Optionally display existing feedback
-st.write("Existing Feedback:")
-st.dataframe(feedback_df)
