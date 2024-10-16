@@ -1,4 +1,5 @@
 import streamlit as st
+import subprocess
 import pandas as pd
 import os
 
@@ -86,6 +87,14 @@ We value your feedback! Please share your thoughts or suggestions for improvemen
     unsafe_allow_html=True,
 )
 
+feedback_file = "feedback.csv"
+
+# Load existing feedback if the file exists
+if os.path.isfile(feedback_file):
+    feedback_df = pd.read_csv(feedback_file)
+else:
+    feedback_df = pd.DataFrame(columns=["Name", "Comments"])  # Create empty DataFrame
+
 # Feedback form
 with st.form(key="feedback_form"):
     name = st.text_input("Your Name")
@@ -93,15 +102,24 @@ with st.form(key="feedback_form"):
     submit_button = st.form_submit_button("Submit Feedback")
 
     if submit_button:
+        # Create a new feedback entry
         feedback_data = {
             "Name": name,
             "Comments": comments,
         }
-        feedback_df = pd.DataFrame([feedback_data])
+        new_feedback_df = pd.DataFrame([feedback_data])
 
-        if not os.path.isfile("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/feedback.csv"):
-            feedback_df.to_csv("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/feedback.csv", index=False, mode="w", header=True)
-        else:
-            feedback_df.to_csv("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/feedback.csv", index=False, mode="a", header=False)
+        # Append new feedback to the existing DataFrame
+        feedback_df = pd.concat([feedback_df, new_feedback_df], ignore_index=True)
 
-        st.success("Thank you for your feedback! We appreciate your input.")
+        # Save the updated feedback DataFrame to the local CSV file
+        feedback_df.to_csv(feedback_file, index=False)
+
+        # Git commands to commit and push changes
+        try:
+            subprocess.run(["git", "add", feedback_file], check=True)
+            subprocess.run(["git", "commit", "-m", "Update feedback.csv"], check=True)
+            subprocess.run(["git", "push"], check=True)
+            st.success("Thank you for your feedback! We appreciate your input.")
+        except subprocess.CalledProcessError as e:
+            st.error(f"Error pushing feedback to GitHub: {e}")
