@@ -86,7 +86,7 @@ def plot_gauge(
     for frame in frames:
         fig.update_traces(value=frame.data[0].value)
         placeholder.plotly_chart(fig, use_container_width=True)
-        time.sleep(0.05)  # Adjust speed of animation
+        time.sleep(0.0005)  # Adjust speed of animation
 
 
 @st.cache_data
