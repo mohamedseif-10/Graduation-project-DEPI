@@ -84,6 +84,7 @@ We value your feedback! Please share your thoughts or suggestions for improvemen
     unsafe_allow_html=True,
 )
 
+
 feedback_file = "feedback.csv"
 
 # Load existing feedback if the file exists
@@ -106,31 +107,14 @@ with st.form(key="feedback_form"):
         }
         new_feedback_df = pd.DataFrame([feedback_data])
 
-        if not new_feedback_df.empty:  # Check if feedback is not empty
-            # Append new feedback to the existing DataFrame
-            feedback_df = pd.concat([feedback_df, new_feedback_df], ignore_index=True)
+        # Append new feedback to the existing DataFrame
+        feedback_df = pd.concat([feedback_df, new_feedback_df], ignore_index=True)
 
-            # Save the updated feedback DataFrame to the local CSV file
-            feedback_df.to_csv(feedback_file, index=False)
+        # Save the updated feedback DataFrame to the local CSV file
+        feedback_df.to_csv(feedback_file, index=False)
 
-            # Git commands to commit and push changes
-            try:
-                # Update the remote URL with your username and personal access token
-                remote_url = "https://mohamedseif-10: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@github.com/mohamedseif-10/Graduation-project-DEPI.git"
-                subprocess.run(["git", "remote", "set-url", "origin", remote_url], check=True)
+        st.success("Thank you for your feedback! We appreciate your input.")
 
-                # Check if there are changes to commit
-                result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
-
-                if result.stdout.strip():  # If there are changes
-                    subprocess.run(["git", "add", feedback_file], check=True)
-                    subprocess.run(["git", "commit", "-m", "Update feedback.csv"], check=True)
-                    subprocess.run(["git", "push"], check=True)
-                    st.success("Thank you for your feedback! We appreciate your input.")
-                else:
-                    st.warning("No changes to commit.")
-
-            except subprocess.CalledProcessError as e:
-                st.error(f"Error pushing feedback to GitHub: {e}")
-        else:
-            st.warning("No feedback submitted. Please enter your comments.")
+# Optionally display existing feedback
+st.write("Existing Feedback:")
+st.dataframe(feedback_df)
