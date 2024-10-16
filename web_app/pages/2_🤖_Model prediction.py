@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 import plotly.express as px
+import joblib
+import requests
 
 st.set_page_config(
     page_icon=":bank:",
@@ -24,9 +26,13 @@ def load_data():
 
 data = load_data()
 
-# Load the model pipeline
-model_pipeline = joblib.load("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/Machine_Learning/model_pipeline.pkl")
+url = "https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/Machine_Learning/model_pipeline.pkl"
+response = requests.get(url)
 
+with open("model_pipeline.pkl", "wb") as f:
+    f.write(response.content)
+
+model_pipeline = joblib.load("model_pipeline.pkl")
 
 # Sidebar customization
 st.markdown(
