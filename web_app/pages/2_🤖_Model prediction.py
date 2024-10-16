@@ -135,6 +135,7 @@ with st.form(key="unique_prediction_form"):
             min_value=data["estimated_salary"].min(),
             max_value=data["estimated_salary"].max(),
             value=50000.0,
+            step=100.0
         )
     )
     country = st.selectbox(
