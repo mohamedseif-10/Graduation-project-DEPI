@@ -108,6 +108,7 @@ with st.form(key="unique_prediction_form"):
             min_value=data["balance"].min(),
             max_value=data["balance"].max(),
             value=0.0,
+            step=100.0
         )
     )
     age = int(
