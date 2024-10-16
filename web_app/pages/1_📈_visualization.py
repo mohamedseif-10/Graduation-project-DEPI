@@ -38,7 +38,6 @@ data =load_data()
 
 
 # is there any way to cache the data but after the first time
-@st.cache_data
 def plot_gauge(
     target_value, indicator_color, indicator_suffix, indicator_title, max_bound
 ):
