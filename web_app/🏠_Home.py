@@ -47,14 +47,12 @@ Welcome to the Bank Customer Churn Prediction web application! This platform uti
 - **Country**: The geographical location of the customer (France, Germany, or Spain).
 
 ## <span style="color:black">Objective💭</span>
-
 - **Predict Customer Churn**: Utilize machine learning algorithms to foresee churn based on historical customer data.
 - **Insights and Analysis**: Identify the most impactful features influencing churn to enable targeted interventions.
 - **Support Banks**: Provide actionable recommendations for banks operating in France, Germany, and Spain to minimize churn and enhance customer satisfaction.
 
 ## <span style="color:black">Methodology 📊</span>
 Our approach involves several critical steps to ensure the effectiveness of the churn prediction model:
-
 1. **Data Collection**: Gathering comprehensive datasets from banking sources, including customer demographics and account information.
 2. **Data Preprocessing**: Cleaning and preparing the data by handling missing values, encoding categorical variables, and normalizing numerical features.
 3. **Exploratory Data Analysis (EDA)**: Analyzing the data to uncover patterns, trends, and relationships between different features using visualizations.
@@ -70,7 +68,6 @@ Our approach involves several critical steps to ensure the effectiveness of the 
 
 ## <span style="color:black">Technology Stack 💻</span>
 This project is built using a robust technology stack to ensure efficient performance and usability:
-
 - **Programming Language**: Python
 - **Framework**: Streamlit for developing the web application.
 - **Data Manipulation**: Pandas and NumPy for data processing.
@@ -122,10 +119,17 @@ with st.form(key="feedback_form"):
                 remote_url = "https://mohamedseif-10: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@github.com/mohamedseif-10/Graduation-project-DEPI.git"
                 subprocess.run(["git", "remote", "set-url", "origin", remote_url], check=True)
 
-                subprocess.run(["git", "add", feedback_file], check=True)
-                subprocess.run(["git", "commit", "-m", "Update feedback.csv"], check=True)
-                subprocess.run(["git", "push"], check=True)
-                st.success("Thank you for your feedback! We appreciate your input.")
+                # Check if there are changes to commit
+                result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+
+                if result.stdout.strip():  # If there are changes
+                    subprocess.run(["git", "add", feedback_file], check=True)
+                    subprocess.run(["git", "commit", "-m", "Update feedback.csv"], check=True)
+                    subprocess.run(["git", "push"], check=True)
+                    st.success("Thank you for your feedback! We appreciate your input.")
+                else:
+                    st.warning("No changes to commit.")
+
             except subprocess.CalledProcessError as e:
                 st.error(f"Error pushing feedback to GitHub: {e}")
         else:
