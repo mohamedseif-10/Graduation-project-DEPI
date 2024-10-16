@@ -1,6 +1,6 @@
-# Graduation-project-DEPI
+# Graduation-project-DEPI ##(Bank Churn Prediction Project)
 
-# Bank Churn Prediction Project
+
 
 ## Table of Contents
 - [Project Overview](#project-overview)
