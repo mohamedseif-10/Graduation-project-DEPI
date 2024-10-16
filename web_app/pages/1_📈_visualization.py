@@ -37,14 +37,14 @@ def load_data():
 
 data = load_data()
 
-# @st.cache_data
+
+# is there any way to cache the data but after the first time
+@st.cache_data
 def plot_gauge(
     target_value, indicator_color, indicator_suffix, indicator_title, max_bound
 ):
-    num_frames = 30 
-    values = np.linspace(
-        0, target_value, num_frames
-    )  
+    num_frames = 30
+    values = np.linspace(0, target_value, num_frames)
     frames = [
         go.Frame(
             data=[
@@ -74,7 +74,7 @@ def plot_gauge(
     ]
 
     fig = go.Figure(
-        data=frames[0].data, 
+        data=frames[0].data,
         layout=frames[0].layout,
         frames=frames,
     )
@@ -115,19 +115,21 @@ def plot_bottom_left():
     active_churn_counts = (
         data.groupby(["active_member", "churn"]).size().reset_index(name="count")
     )
-    active_churn_counts["active_member_status"] = active_churn_counts["active_member"].map(
-        {0: "Inactive", 1: "Active"}
-    )
+    active_churn_counts["active_member_status"] = active_churn_counts[
+        "active_member"
+    ].map({0: "Inactive", 1: "Active"})
     active_churn_counts["label"] = active_churn_counts.apply(
         lambda row: f"{'Churn' if row['churn'] == 1 else 'Non-Churn'} - {row['active_member_status']}",
         axis=1,
     )
 
     # Calculate total count
-    total_count = active_churn_counts['count'].sum()
+    total_count = active_churn_counts["count"].sum()
 
     # Create a new column for percentages
-    active_churn_counts['percentage'] = (active_churn_counts['count'] / total_count) * 100
+    active_churn_counts["percentage"] = (
+        active_churn_counts["count"] / total_count
+    ) * 100
 
     custom_colors2 = ["#193967", "#0068c9", "#83c9ff", "#f2c453"]
     fig = px.pie(
@@ -147,6 +149,7 @@ def plot_bottom_left():
 
     st.plotly_chart(fig)
 
+
 def plot_bottom_right():
     bins = [-1, 50000, 90000, 127000, np.inf]
     labels = ["0-50k", "50k-90k", "90k-127k", "127k+"]
@@ -159,12 +162,7 @@ def plot_bottom_right():
 
     # Create a pie chart for the balance segments of churned customers
     fig = go.Figure()
-    custom_colors2 = [
-        "#193967" ,
-        "#0068c9",
-        "#83c9ff",
-        "#f2c453"
-    ]
+    custom_colors2 = ["#193967", "#0068c9", "#83c9ff", "#f2c453"]
     fig.add_trace(
         go.Pie(
             labels=balance_churn_counts["balance_seg"],
@@ -173,7 +171,7 @@ def plot_bottom_right():
             hole=0.3,
             marker=dict(
                 colors=custom_colors2,  # Set the custom colors here
-                line=dict(color="#FFFFFF", width=2)
+                line=dict(color="#FFFFFF", width=2),
             ),
         )
     )
@@ -185,6 +183,7 @@ def plot_bottom_right():
         margin=dict(l=23, r=26, t=100, b=0, pad=0),
     )
     st.plotly_chart(fig)
+
 
 st.title("Customer Churn visualizations")
 st.image("Background.jpg", use_column_width=True, width=700)
@@ -215,16 +214,26 @@ categorical_columns = np.array(data.select_dtypes(include=[object]).columns.toli
 st.markdown("### Descriptive Statistics")
 
 churn_counts = data["churn"].value_counts()
-# Calculate percentages
+
 total_count = churn_counts.sum()
 churn_percentage = (churn_counts.get(1, 0) / total_count) * 100
 non_churn_percentage = 100 - churn_percentage
 active_counts = data["active_member"].value_counts()
 
-# Calculate percentages
 total_count = active_counts.sum()
 active_percentage = (active_counts.get(1, 0) / total_count) * 100
 non_active_percentage = 100 - active_percentage
+
+# the percentage of people has credit card
+credit_card_counts = data["credit_card"].value_counts()
+total_count = credit_card_counts.sum()
+credit_card_percentage = (credit_card_counts.get(1, 0) / total_count) * 100
+
+
+avg_credit_score = data["credit_score"].mean()
+
+# most number of products
+most_products = data["products_number"].mode()[0]
 
 
 with st.container():
@@ -243,28 +252,29 @@ with st.container():
 
     with column_2:
         plot_gauge(
-            data[data["active_member"] == 1].shape[0],
+            avg_credit_score,
             "#0068C9",
             "",
-            "Total Active Members",
-            10000,
+            "Avg Credit Score",
+            data["credit_score"].max(),
         )
         plot_gauge(active_percentage, "#0068C9", "%", "Active Member Rate", 100)
 
     with column_3:
         plot_gauge(
-            data["balance"].mean(),
+            data["tenure"].mean(),
             "#0068C9",
-            "$",
-            "Average Balance",
-            data["balance"].max(),
+            "",
+            "Avg Tenure",
+            data["tenure"].max(),
         )
+
         plot_gauge(
-            data["balance"].mean(),
+            credit_card_percentage,
             "#0068C9",
-            "$",
-            "Average Balance",
-            data["balance"].max(),
+            "%",
+            "Credit Card Holder Rate",
+            100,
         )
 
     with column_4:
@@ -277,11 +287,11 @@ with st.container():
         )
 
         plot_gauge(
-            data["age"].mean(),
+            most_products,
             "#0068C9",
             "",
-            "Average ages",
-            data["age"].max(),
+            "Most Number of Products",
+            data["products_number"].max(),
         )
 
 
@@ -382,7 +392,8 @@ def pie_chart_churned_age():
 
     st.plotly_chart(fig)
 
-@st.chache_data
+
+@st.cache_data
 def bar_gender_country():
     data["gender_country"] = data["gender"] + " " + data["country"]
 
@@ -456,7 +467,7 @@ with st.container():
     with col8:
         bar_gender_country()
 
-bottom_left_column, bottom_right_column= st.columns((3, 3))
+bottom_left_column, bottom_right_column = st.columns((3, 3))
 with st.container():
     with bottom_left_column:
         plot_bottom_left()
@@ -466,29 +477,121 @@ with st.container():
 
 print("-" * 20)
 
+# Mapping for churn labels
+churn_mapping = {0: "Not Churned", 1: "Churned"}
 
+# Apply mapping to churn-related columns
+data["churn"] = data["churn"].map(churn_mapping)
+data["gender_country_churn"] = (
+    data["gender"] + "_" + data["country"] + "_" + data["churn"]
+)
+data["Active_churn"] = data["active_member"].astype(str) + "_" + data["churn"]
+data["country_churn"] = data["country"] + "_" + data["churn"]
+data["age_group_churn"] = data["age_group"].astype(str) + "_" + data["churn"]
+data["balance_salary_ratio_churn"] = (
+    data["balance_salary_ratio"].astype(str) + "_" + data["churn"]
+)
+data["tenure_churn"] = data["tenure"].astype(str) + "_" + data["churn"]
+
+# Custom groupings
+data["gender_country"] = data["gender"] + "_" + data["country"]
+data["credit_score_gender_country"] = (
+    data["credit_score_seg"].astype(str) + "_" + data["gender_country"]
+)
+data["active_member_credit_card"] = (
+    data["active_member"].astype(str) + "_" + data["credit_card"].astype(str)
+)
+
+# Pie chart columns
+pie_chart_columns = [
+    "country",
+    "gender",
+    "products_number",
+    "credit_card",
+    "active_member",
+    "churn",
+    "Active_churn",
+    "country_churn",
+    "age_group_churn",
+    "active_member_credit_card",
+]
+
+# Columns suitable for X-axis (numeric data)
+x_axis_columns = [
+    "age",
+    "credit_score",
+    "balance",
+    "tenure",
+]
+
+# Columns suitable for Y-axis (numeric or categorical for aggregation)
+y_axis_columns = [
+    "age",
+    "credit_score",
+    "balance",
+    "tenure",
+    "estimated_salary",
+]
+
+# Custom color palette
+custom_colors = [
+    "#0068c9",
+    "#83c9ff",
+    "#f2c453",
+    "#1f77b4",
+    "#ff7f0e",
+    "#aec7e8",
+    "#ffbb78",
+    "#98df8a",
+    "#ff9896",
+    "#2ca02c",
+]
+
+# Streamlit Dashboard
 st.markdown("### Discover more Interactive Dashboards 📊")
 
-tab1, tab2, tab3 = st.tabs(["Bar chart", "Histogram", "Pie chart"])
+tab1, tab2 = st.tabs(["Histogram", "Pie chart"])
+
+# **Histogram Section**
+custom_colors_hist = ["#0068c9", "#f2c453"]
 
 with tab1:
-    fig_bar = px.bar(data, x="age", y="churn", color="gender")
-    st.plotly_chart(fig_bar)
+    col1, col2 = st.columns(2)
 
-with tab2:
-
-    col1, col2, col3 = st.columns(3)
+    # Select X-axis from suitable numeric columns
     with col1:
-        x_column = st.selectbox("X-axis", numerical_columns)
-    with col2:
-        y_column = st.selectbox("Y-axis", numerical_columns)
-    with col3:
-        color_column = st.selectbox("Color", ["active_member", "churn", "gender"])
+        x_column = st.selectbox("X-axis", x_axis_columns, key="hist_x")
 
-    fig_hist = px.histogram(data, x=x_column, y=y_column, color=color_column)
+    # Select color mapping for the histogram
+    with col2:
+        color_column = st.selectbox(
+            "Color", ["active_member", "churn", "gender"], key="hist_color"
+        )
+
+    # Slider to set the number of bins
+    bins = st.slider("Number of bins", min_value=5, max_value=100, value=20)
+
+    # Create the histogram using X-axis and count for Y-axis
+    fig_hist = px.histogram(
+        data,
+        x=x_column,
+        color=color_column,
+        nbins=bins,
+        barmode="group",  # or "overlay" depending on your preference
+        title=f"{x_column} Distribution with {bins} bins",
+        color_discrete_sequence=custom_colors_hist,
+    )
     st.plotly_chart(fig_hist)
 
-with tab3:
-    pie_param = st.selectbox("Select a parameter", data.columns)
-    fig_pie = px.pie(data, names=pie_param, title="Products Distribution")
+# **Pie Chart Section**
+with tab2:
+    pie_param = st.selectbox(
+        "Select a parameter", pie_chart_columns, key="pie_param"
+    )  # Updated to only relevant parameters
+    fig_pie = px.pie(
+        data,
+        names=pie_param,
+        title=f"{pie_param} Distribution",
+        color_discrete_sequence=custom_colors,
+    )
     st.plotly_chart(fig_pie)

@@ -1,22 +1,22 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9.1-slim
+FROM python:3.10-slim-bullseye
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy all the .py and .ipynb files to the container
-COPY *.py /app/
-COPY *.ipynb /app/
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install Jupyter and any other required dependencies from a requirements.txt
+# Copy requirements.txt for package installation
 COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Jupyter if it's not included in requirements.txt
-RUN pip install jupyter
+# Install any needed packages specified in requirements.txt
+RUN pip install -r requirements.txt
 
-# Expose port 8888 for Jupyter Notebook
-EXPOSE 8888
+# Install Streamlit if it's not included in requirements.txt
+RUN pip install streamlit
 
-# Run Jupyter notebook
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+# Expose port 8501 for Streamlit (not 80, since Streamlit runs on 8501)
+EXPOSE 8501
+
+# Command to run the Streamlit app
+CMD ["sh", "-c", "cd web_app && streamlit run 🏠_Home.py --server.enableCORS=false --server.address=0.0.0.0"]

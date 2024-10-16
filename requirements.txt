@@ -7,3 +7,5 @@ scikit-learn
 mlflow
 jupyter
 nbformat
+joblib
+streamlit
