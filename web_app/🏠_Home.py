@@ -12,7 +12,7 @@ st.set_page_config(
 st.title("Bank Customer Churn Prediction")
 
 # Add this photo
-st.image("Bank.jpg", use_column_width=True)
+st.image("Background.jpg", use_column_width=True)
 
 # Styling for sidebar
 st.markdown(
