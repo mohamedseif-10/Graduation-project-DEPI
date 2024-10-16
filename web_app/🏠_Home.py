@@ -1,4 +1,5 @@
 import streamlit as st
+import subprocess
 import pandas as pd
 import os
 
@@ -6,12 +7,12 @@ st.set_page_config(
     page_title="Bank Churn Prediction",
     page_icon=":bank:",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 st.title("Bank Customer Churn Prediction")
 
-st.image("Background.jpg", use_column_width=True)
+st.image("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/Background.jpg", use_column_width=True)
 
 st.markdown(
     """
@@ -46,14 +47,12 @@ Welcome to the Bank Customer Churn Prediction web application! This platform uti
 - **Country**: The geographical location of the customer (France, Germany, or Spain).
 
 ## <span style="color:black">Objective💭</span>
-
 - **Predict Customer Churn**: Utilize machine learning algorithms to foresee churn based on historical customer data.
 - **Insights and Analysis**: Identify the most impactful features influencing churn to enable targeted interventions.
 - **Support Banks**: Provide actionable recommendations for banks operating in France, Germany, and Spain to minimize churn and enhance customer satisfaction.
 
 ## <span style="color:black">Methodology 📊</span>
 Our approach involves several critical steps to ensure the effectiveness of the churn prediction model:
-
 1. **Data Collection**: Gathering comprehensive datasets from banking sources, including customer demographics and account information.
 2. **Data Preprocessing**: Cleaning and preparing the data by handling missing values, encoding categorical variables, and normalizing numerical features.
 3. **Exploratory Data Analysis (EDA)**: Analyzing the data to uncover patterns, trends, and relationships between different features using visualizations.
@@ -69,7 +68,6 @@ Our approach involves several critical steps to ensure the effectiveness of the 
 
 ## <span style="color:black">Technology Stack 💻</span>
 This project is built using a robust technology stack to ensure efficient performance and usability:
-
 - **Programming Language**: Python
 - **Framework**: Streamlit for developing the web application.
 - **Data Manipulation**: Pandas and NumPy for data processing.
@@ -86,6 +84,15 @@ We value your feedback! Please share your thoughts or suggestions for improvemen
     unsafe_allow_html=True,
 )
 
+
+feedback_file = "feedback.csv"
+
+# Load existing feedback if the file exists
+if os.path.isfile(feedback_file):
+    feedback_df = pd.read_csv(feedback_file)
+else:
+    feedback_df = pd.DataFrame(columns=["Name", "Comments"])  # Create empty DataFrame
+
 # Feedback form
 with st.form(key="feedback_form"):
     name = st.text_input("Your Name")
@@ -93,15 +100,17 @@ with st.form(key="feedback_form"):
     submit_button = st.form_submit_button("Submit Feedback")
 
     if submit_button:
+        # Create a new feedback entry
         feedback_data = {
             "Name": name,
             "Comments": comments,
         }
-        feedback_df = pd.DataFrame([feedback_data])
+        new_feedback_df = pd.DataFrame([feedback_data])
 
-        if not os.path.isfile("feedback.csv"):
-            feedback_df.to_csv("feedback.csv", index=False, mode="w", header=True)
-        else:
-            feedback_df.to_csv("feedback.csv", index=False, mode="a", header=False)
+        # Append new feedback to the existing DataFrame
+        feedback_df = pd.concat([feedback_df, new_feedback_df], ignore_index=True)
+
+        # Save the updated feedback DataFrame to the local CSV file
+        feedback_df.to_csv(feedback_file, index=False)
 
         st.success("Thank you for your feedback! We appreciate your input.")

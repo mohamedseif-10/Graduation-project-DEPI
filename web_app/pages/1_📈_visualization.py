@@ -9,9 +9,10 @@ import random
 import time
 
 st.set_page_config(
+    page_title="Bank Churn Prediction",
     page_icon=":bank:",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 
@@ -31,15 +32,13 @@ st.markdown(
 
 @st.cache_data
 def load_data():
-    data = pd.read_csv("../Data/modified_Bank_Customer_Churn_Prediction.csv")
+    data = pd.read_csv("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-depi/main/Data/modified_Bank_Customer_Churn_Prediction.csv")
     return data
 
-
-data = load_data()
+data =load_data()
 
 
 # is there any way to cache the data but after the first time
-@st.cache_data
 def plot_gauge(
     target_value, indicator_color, indicator_suffix, indicator_title, max_bound
 ):
@@ -68,7 +67,7 @@ def plot_gauge(
                     },
                 )
             ],
-            name=f"Value: {value}",  # Frame name
+            name=f"Value: {value}",
         )
         for value in values
     ]
@@ -88,7 +87,7 @@ def plot_gauge(
     for frame in frames:
         fig.update_traces(value=frame.data[0].value)
         placeholder.plotly_chart(fig, use_container_width=True)
-        time.sleep(0.0000005)  # Adjust speed of animation
+        time.sleep(0.007)  # Adjust speed of animation
 
 
 @st.cache_data
@@ -186,7 +185,7 @@ def plot_bottom_right():
 
 
 st.title("Customer Churn visualizations")
-st.image("Background.jpg", use_column_width=True, width=700)
+st.image("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/Background.jpg", use_column_width=True, width=700)
 st.write("### Discover your inner treasure💰")
 st.sidebar.info(
     """

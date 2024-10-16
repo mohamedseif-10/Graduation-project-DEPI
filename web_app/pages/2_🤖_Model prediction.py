@@ -2,11 +2,14 @@ import streamlit as st
 import pandas as pd
 import joblib
 import plotly.express as px
+import joblib
+import requests
 
 st.set_page_config(
+    page_title="Bank Churn Prediction",
     page_icon=":bank:",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 # add spinner
@@ -17,15 +20,20 @@ with st.spinner("Loading💸💸"):
 # Load the data
 @st.cache_data
 def load_data():
-    data = pd.read_csv("../Data/modified_Bank_Customer_Churn_Prediction.csv")
+    data = pd.read_csv("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-depi/main/Data/modified_Bank_Customer_Churn_Prediction.csv")
+
     return data
 
 
 data = load_data()
 
-# Load the model pipeline
-model_pipeline = joblib.load("../Machine_Learning/model_pipeline.pkl")
+url = "https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/Machine_Learning/model_pipeline.pkl"
+response = requests.get(url)
 
+with open("model_pipeline.pkl", "wb") as f:
+    f.write(response.content)
+
+model_pipeline = joblib.load("model_pipeline.pkl")
 
 # Sidebar customization
 st.markdown(
@@ -74,7 +82,7 @@ if "predictions" not in st.session_state:
 # Assign a unique key to the form
 with st.form(key="unique_prediction_form"):
     st.write("## Predicting customer churn📊")
-    st.image("predict.jpg", use_column_width=True, width=400)
+    st.image("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/predict.jpg", use_column_width=True, width=400)
     st.write("#### Please fill in the following details:")
 
     credits = int(
@@ -100,6 +108,7 @@ with st.form(key="unique_prediction_form"):
             min_value=data["balance"].min(),
             max_value=data["balance"].max(),
             value=0.0,
+            step=100.0
         )
     )
     age = int(
@@ -126,6 +135,7 @@ with st.form(key="unique_prediction_form"):
             min_value=data["estimated_salary"].min(),
             max_value=data["estimated_salary"].max(),
             value=50000.0,
+            step=100.0
         )
     )
     country = st.selectbox(
