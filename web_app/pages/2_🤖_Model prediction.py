@@ -25,7 +25,7 @@ def load_data():
 data = load_data()
 
 # Load the model pipeline
-model_pipeline = joblib.load("../Machine_Learning/model_pipeline.pkl")
+model_pipeline = joblib.load("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/Machine_Learning/model_pipeline.pkl")
 
 
 # Sidebar customization
