@@ -6,11 +6,6 @@
 - [Objectives](#objectives)
 - [Dataset](#dataset)
 - [Technologies Used](#technologies-used)
-- [Usage](#usage)
-- [Features](#features)
-- [How to Contribute](#how-to-contribute)
-- [License](#license)
-- [Feedback](#feedback)
 
 ## Project Overview
 This project aims to predict whether a bank customer will churn based on various factors such as credit score, age, balance, and account activity. The dataset includes customers from banks in France, Germany, and Spain. The goal is to provide actionable insights to reduce customer churn rates and enhance customer retention strategies.
