@@ -41,5 +41,17 @@ The dataset consists of customer information, including:
 - Docker
 - Hugging face
   
+## Build and run doccker image
+- ### first Command
+- docker build -t final_depi .
+- ### Second Command
+- docker run -p 8501:8501 final_depi
+
+#After that you can open local link http://localhost:8501
+
+- 
+
+
+
 
 
