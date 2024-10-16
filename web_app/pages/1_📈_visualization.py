@@ -497,8 +497,12 @@ data["gender_country"] = data["gender"] + "_" + data["country"]
 data["credit_score_gender_country"] = (
     data["credit_score_seg"].astype(str) + "_" + data["gender_country"]
 )
-data["active_member_credit_card"] = (
-    data["active_member"].astype(str) + "_" + data["credit_card"].astype(str)
+data['active_member_credit_card'] = data.apply(
+    lambda row: 'Active with Credit' if row['active_member'] == 1 and row['credit_card'] == 1 else 
+                 'Inactive with Credit' if row['active_member'] == 0 and row['credit_card'] == 1 else 
+                 'Active without Credit' if row['active_member'] == 1 and row['credit_card'] == 0 else 
+                 'Inactive without Credit',
+    axis=1
 )
 
 # Pie chart columns
