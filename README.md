@@ -41,6 +41,9 @@ The dataset consists of customer information, including:
 - NumPy
 - Docker
 - Hugging face
+
+# run these in terminal to show the board
+- tensorboard --logdir=Machine_Learning/logs/Models
   
 ## Build and run doccker image
 - ### first Command
