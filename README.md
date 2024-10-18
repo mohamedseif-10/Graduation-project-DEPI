@@ -49,7 +49,7 @@ The dataset consists of customer information, including:
 - ### first Command
 - docker build -t final_depi .
 - ### Second Command
-- docker run -p 8501:8501 final_depi
+- docker run -p 8501:8501 final_depi.
 
 
 
