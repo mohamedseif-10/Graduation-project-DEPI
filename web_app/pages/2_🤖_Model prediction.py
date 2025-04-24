@@ -82,7 +82,7 @@ if "predictions" not in st.session_state:
 # Assign a unique key to the form
 with st.form(key="unique_prediction_form"):
     st.write("## Predicting customer churn📊")
-    st.image("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/predict.jpg", use_column_width=True, width=400)
+    st.image("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/predict.jpg", use_container_width=True, width=400)
     st.write("#### Please fill in the following details:")
 
     credits = int(
