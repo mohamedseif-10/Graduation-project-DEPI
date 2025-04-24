@@ -185,7 +185,7 @@ def plot_bottom_right():
 
 
 st.title("Customer Churn visualizations")
-st.image("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/Background.jpg", use_column_width=True, width=700)
+st.image("https://raw.githubusercontent.com/mohamedseif-10/Graduation-project-DEPI/main/web_app/Background.jpg", use_container_width=True, width=700)
 st.write("### Discover your inner treasure💰")
 st.sidebar.info(
     """
